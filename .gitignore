@@ -1,3 +1,6 @@
 build/
 node_modules/
 workspace.code-workspace
+.env
+
+interacting-with-contract.js

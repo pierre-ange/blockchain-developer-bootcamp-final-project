@@ -1,31 +1,73 @@
-# Idea 1: A la carte subscription
+# Final Project - Blockchain Developer Bootcamp
 
-Implement a subscription platform enabling creators (in the most general sense, referred to as content providers CP below) to monetize their content and users to unlock exclusive access to their favourite creators' content for a given period of time against a fee.  
+This repository is home to my submission to the 2021 Consensys Blockchain Developer Bootcamp.  
 
-We aim to provide a platform (front-end + smart-contract `C`) enabling content providers with a fee plan in mind to call our smart contract `C` and create another, unique, dedicated smart contract `D` to act as intermediary between them and their subscribers. The fee plan would define a trial period length, subscription tiers (we'll limit ourselves to a single tier to begin with), and a fee schedule (flat yearly fee to start with, but more complex schedules could be set up encouraging long-term commitment).  
+*Status: **WIP***
 
-Subscribers will be able to subscribe to a creator's content by transferring the adequate USDC amount to smart contract `D`. The interesting feature here is that the money does not go directly to the content provider, but is instead locked in the smart contract, initially remaining the subscriber's property and gradually (linearly in time?) shifting to being the content provider's property. An initial trial period can be set up whereby users may opt for a full refund should they wish to cancel their subscription short. At any point after this initial period, cancellation is still possible to recover the unspent portion of the subscription fee, the spent portion remaining the property of the content provider. The content provider can choose to withdraw the spent portion of fees at any time and frequency.  
+# Subscription platform
 
-Content providers could in theory be any person, group, DAO or company creating online content that users may be willing to pay for to get exclusive access to. As an example, a CP could indeed be a newspaper wanting to give exclusive content to paying readers, or a blogger, artist, etc.
-A couple of requirements for content providers:  
-- They own an Ethereum address
-- Their content must be available via a webiste of their own, allowing users to sign in with their Ethereum wallet for identification. In a future when social media platforms would start allowing Ethereum authentication, social media content could be unlocked too: subscribers would be able to see premium tweets, Instagram posts, Youtube videos, etc. by signing in with their wallet.
+## Description
 
-This system has several interesting implications:  
-- Enable creators to be paid directly for their content (in the future of Ethereum authentication, for their social media content too!), no third party.
-- Enable users to subscribe in a pseudo anonymous way (no credit cared details, no email address) to subscribe to their favourite creators' exclusive content.
-- Flexible subscription plans, with an embedded trial period and possibility to withdraw the unspent unsubscription fee at any point. No questions asked, ever.
-- Even though the fee is paid upfront for the entirety of the subscription, the unspent money remains the property of the user at all times, available for withdrawal.
-- Creator can withdraw the earned portion of the fee (pooled across all subscribers) at anytime.
-- Maintain pseudo anonimity of subscribers, while also allowing creators to potentially further reward subscribers with NFTs or tokens in a straightforward manner.
+I am implementing a subscription platform enabling publishers to monetize their content and users to subscribe to publisher's content.  
 
-## Workflow
+## Workflow  
+  1. Publisher creates a new plan: duration, fee in ETH.
+  2. Subscriber can subscribe to a plan, by paying the fixed fee to the publisher.
+  3. Subscriber can renew a subscription.
+  4. Subscriber can cancel a subscription. As a start and to make things easier, there is no refund mechanism.
+  5. Subscriber can pause a subscription, then activate it again when they wish to.
 
-- Content Provider enters our website, chooses a fee plan, initiates a transaction with our smart contract `C` to spin up their own smart contract `D`. Smart contract `D` is registered with `C`.
-- Up to the content provider to do what is necessary on their website to identify subscribing wallets and filter contents based on subscription tier.
-- Users come to our platform, choose an artist they wish to subscribe to, and transfer the money to smart contract `D`. Note: we choose probably think of a smarter way to do this, to avoid scams.
-- At this point, they are identified as subscribers.
-- Up until the end of the trial period, users can initiate a second transaction to cancel their subscription and receive a full refund (minus gas fees).
-- Users can also pause their subscription at any point.
-- Once the trial period ends, the CP starts being paid and the fee gets split between a spent portion (available for CP to withdraw at any point) and an unspent portion (remaining the property of subscribers, can be withdrawn at any time). As time goes by, money gradually flows from the unspent to the spent portion.
-- Content provider can at any time call a self-destruct method. The unspent fees gets transferred back to subscribers, the spent fees get transferred to the content provider wallet.
+## Possible improvements
+  1. Publisher does not get paid immediately, but via an accrual mechanism so that they can only redeem the full subscription fee at the end of the term. This should allow the following two improvements:  
+     a. Allow cancellation refunds (via mechanism discussed in point 1.)  
+     b. Allow publisher to terminate a plan. Non-accrued fees are then sent back to subscribers' wallets.
+  2. Allow payments in ERC20 token instead of ETH (DAI for example)
+
+# Directory Structure
+
+# Front-End Access
+
+# Bootcamp checklist
+
+- [ ] Follow this naming format: https://github.com/YOUR_GITHUB_USERNAME_HERE/blockchain-developer-bootcamp-final-project
+  
+- [ ] Contain a [README.md](.README.md) file which describes:
+  - [ ] the project, 
+  - [ ] the directory structure, and 
+  - [ ] where the frontend project can be accessed? 
+  - [ ] *optional* public Ethereum address if you'd like your certification as an NFT?
+  
+- [ ] Contain smart contract(s) which:
+  - [ ] Are commented to the specs described by NatSpec Solidity documentation
+  - [ ] Use at least 2 design patterns from the "Smart Contracts" section:
+    - [ ] Inter-Contract Execution (Calling functions in external contracts) 
+    - [ ] Inheritance and Interfaces (Importing and extending contracts and/or using contract interfaces) 
+    - [ ] Oracles (retrieving third-party data)
+    - [ ] Access Control Design Patterns
+    - [ ] Upgradable Contracts
+    - [ ] Optimizing Gas
+  - [ ] Protect against 2 attack vectors from the "Smart Contracts" section with its the [SWC number](https://swcregistry.io/). 
+  - [ ] Inherits from at least one library or interface
+  - [ ] Can be easily compiled, migrated and tested
+  
+- [ ] Contain a Markdown file named [design_pattern_decisions.md](./design_pattern_decisions.md) and [avoiding_common_attacks.md](/avoiding_common_attacks.md)
+
+- [ ] Have at least five smart contract unit tests that pass?
+
+- [ ] Contain a [deployed_address.txt](./deployed_address.txt) file which contains the testnet address and network where your contract(s) have been deployed
+  
+- [ ] Have a frontend interface built with a framework like React or HTML/CSS/JS that:
+  - [ ] Detects the presence of MetaMask
+  - [ ] Connects to the current account
+  - [ ] Displays information from your smart contract
+  - [ ] Allows a user to submit a transaction to update smart contract state
+  - [ ] Updates the frontend if the transaction is successful or not
+  
+- [ ] Hosted on Github Pages, Heroku, Netlify, Fleek, or some other free frontend service that gives users a public interface to your decentralized application? (That address should be in your README.md document)
+
+- [ ] Have clear instructions for: 
+  - [ ] Installing dependencies for your project 
+  - [ ] Accessing or - if your project needs a server (not required) - running your project
+  - [ ] Running your smart contract unit tests and which port a local testnet should be running on. 
+  
+- [ ] A screencast of you walking through your project, including submitting transactions and seeing the updated state. You can use a screenrecorder of your choosing or something like Loom, and you can share the link to the recording in your README.md.

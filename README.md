@@ -8,7 +8,7 @@ This repository is home to my submission to the 2021 Consensys Blockchain Develo
 
 ## Description
 
-I am implementing a subscription platform enabling publishers to monetize their content and users to subscribe to publisher's content.  
+Subscription platform enabling publishers to monetize their content and users to subscribe to publisher's content.  
 
 ## Workflow  
   1. Publisher creates a new plan: duration, fee in ETH.
@@ -29,7 +29,7 @@ I am implementing a subscription platform enabling publishers to monetize their 
 
 # Bootcamp checklist
 
-- [ ] Follow this naming format: https://github.com/YOUR_GITHUB_USERNAME_HERE/blockchain-developer-bootcamp-final-project
+- [x] Follow this naming format: https://github.com/YOUR_GITHUB_USERNAME_HERE/blockchain-developer-bootcamp-final-project
   
 - [ ] Contain a [README.md](.README.md) file which describes:
   - [ ] the project, 
@@ -38,7 +38,7 @@ I am implementing a subscription platform enabling publishers to monetize their 
   - [ ] *optional* public Ethereum address if you'd like your certification as an NFT?
   
 - [ ] Contain smart contract(s) which:
-  - [ ] Are commented to the specs described by NatSpec Solidity documentation
+  - [x] Are commented to the specs described by NatSpec Solidity documentation
   - [ ] Use at least 2 design patterns from the "Smart Contracts" section:
     - [ ] Inter-Contract Execution (Calling functions in external contracts) 
     - [ ] Inheritance and Interfaces (Importing and extending contracts and/or using contract interfaces) 
@@ -47,12 +47,12 @@ I am implementing a subscription platform enabling publishers to monetize their 
     - [ ] Upgradable Contracts
     - [ ] Optimizing Gas
   - [ ] Protect against 2 attack vectors from the "Smart Contracts" section with its the [SWC number](https://swcregistry.io/). 
-  - [ ] Inherits from at least one library or interface
+  - [x] Inherits from at least one library or interface
   - [ ] Can be easily compiled, migrated and tested
   
 - [ ] Contain a Markdown file named [design_pattern_decisions.md](./design_pattern_decisions.md) and [avoiding_common_attacks.md](/avoiding_common_attacks.md)
 
-- [ ] Have at least five smart contract unit tests that pass?
+- [x] Have at least five smart contract unit tests that pass
 
 - [ ] Contain a [deployed_address.txt](./deployed_address.txt) file which contains the testnet address and network where your contract(s) have been deployed
   

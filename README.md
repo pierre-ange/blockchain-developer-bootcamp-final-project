@@ -25,36 +25,56 @@ Subscription platform enabling publishers to monetize their content and users to
 
 # Directory Structure
 
+```
+blockchain-developer-bootcamp-final-project
+│
+└───contracts
+│   │   Migrations.sol
+│   │   Subscriptions.sol       --> Our contract!
+│   
+└───migrations
+│   │   1_initial_migration.js
+│   │   2_deploy_subscriptions.js
+│
+└───test
+│   │   exceptionHelpers.js
+│   │   subscriptions.test.js   --> Our tests!
+│
+│   README.md
+│   avoiding_common_attacks.md  --> Describe protections taken against attack vectors
+│   deployed_address.txt        --> Network & testnet address where contract is deployed
+│   design_pattern_decisions.md --> Describe design pattern decisions
+│   package-lock.json           --> Project dependency tree
+│   package.json                --> Project requirements
+│   truffle-config.js           --> Truffle config file
+```
+
 # Front-End Access
+
+TBC
 
 # Bootcamp checklist
 
 - [x] Follow this naming format: https://github.com/YOUR_GITHUB_USERNAME_HERE/blockchain-developer-bootcamp-final-project
   
 - [ ] Contain a [README.md](.README.md) file which describes:
-  - [ ] the project, 
-  - [ ] the directory structure, and 
+  - [x] the project, 
+  - [x] the directory structure 
   - [ ] where the frontend project can be accessed? 
   - [ ] *optional* public Ethereum address if you'd like your certification as an NFT?
   
-- [ ] Contain smart contract(s) which:
+- [x] Contain smart contract(s) which:
   - [x] Are commented to the specs described by NatSpec Solidity documentation
-  - [ ] Use at least 2 design patterns from the "Smart Contracts" section:
-    - [ ] Inter-Contract Execution (Calling functions in external contracts) 
-    - [ ] Inheritance and Interfaces (Importing and extending contracts and/or using contract interfaces) 
-    - [ ] Oracles (retrieving third-party data)
-    - [ ] Access Control Design Patterns
-    - [ ] Upgradable Contracts
-    - [ ] Optimizing Gas
-  - [ ] Protect against 2 attack vectors from the "Smart Contracts" section with its the [SWC number](https://swcregistry.io/). 
+  - [x] Use at least 2 design patterns from the "Smart Contracts" section
+  - [x] Protect against 2 attack vectors from the "Smart Contracts" section with its [SWC number](https://swcregistry.io/). 
   - [x] Inherits from at least one library or interface
-  - [ ] Can be easily compiled, migrated and tested
+  - [x] Can be easily compiled, migrated and tested
   
 - [ ] Contain a Markdown file named [design_pattern_decisions.md](./design_pattern_decisions.md) and [avoiding_common_attacks.md](/avoiding_common_attacks.md)
 
 - [x] Have at least five smart contract unit tests that pass
 
-- [ ] Contain a [deployed_address.txt](./deployed_address.txt) file which contains the testnet address and network where your contract(s) have been deployed
+- [x] Contain a [deployed_address.txt](./deployed_address.txt) file which contains the testnet address and network where your contract(s) have been deployed
   
 - [ ] Have a frontend interface built with a framework like React or HTML/CSS/JS that:
   - [ ] Detects the presence of MetaMask

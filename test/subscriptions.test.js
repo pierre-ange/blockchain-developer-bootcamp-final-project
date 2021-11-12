@@ -1,6 +1,6 @@
 
 const { constants, time } = require('@openzeppelin/test-helpers');
-let { catchRevert } = require("./exceptionsHelpers.js");
+let { catchRevert, catchOutOfGas } = require("./exceptionsHelpers.js");
 let BN = web3.utils.BN
 
 const Subscriptions = artifacts.require("Subscriptions");
@@ -32,7 +32,6 @@ contract("Subscriptions", function (accounts) {
     });
   });
 
-  // Create a plan
   describe("Create a plan", async function(){
     it("should have nextPlanId=0 before any plan creation", async function() {
       assert.equal(await instance.nextPlanId(), 0, "nextPlanId should be 0");
@@ -83,7 +82,7 @@ contract("Subscriptions", function (accounts) {
     it("should not allow to subscribe if not enough value sent", async function(){
       // Try subscribe to a plan without sending ETH
       await instance.createPlan(fee, durationDays, {from: alice});
-      await catchRevert(instance.subscribe(0, {from: bob, value: 0}));
+      await catchOutOfGas(instance.subscribe(0, {from: bob, value: 0}));
     });
 
     it("should not allow to subscribe if already subscribed", async function(){
@@ -145,31 +144,31 @@ contract("Subscriptions", function (accounts) {
   describe("Cancel a subscription", async function(){
     it("should not allow cancellation if plan does not exist", async function(){
       // Try cancel a subscription for a plan that does not exist
-      await catchRevert(instance.cancel(0, {from:bob}));
+      await catchRevert(instance.cancelSubscription(0, {from:bob}));
     })
 
     it("should not allow cancellation if no subscription", async function(){
       // Try cancel a subscription that does not exist
       await instance.createPlan(fee, durationDays, {from: alice});
-      await catchRevert(instance.cancel(0, {from:bob}));
+      await catchRevert(instance.cancelSubscription(0, {from:bob}));
     })
 
     it("should cancel the plan", async function(){
       await instance.createPlan(fee, durationDays, {from: alice});
       await instance.subscribe(0, {from: bob, value: fee});
-      await instance.cancel(0, {from: bob})
+      await instance.cancelSubscription(0, {from: bob})
 
       const sub = await instance.subscriptions(bob, 0);
       assert.equal(sub.subscriber, constants.ZERO_ADDRESS);
     })
 
-    it("should emit Cancelled event", async function(){
+    it("should emit CancelledSubscription event", async function(){
       await instance.createPlan(fee, durationDays, {from: alice});
       await instance.subscribe(0, {from: bob, value: fee});
-      const res = await instance.cancel(0, {from: bob})
+      const res = await instance.cancelSubscription(0, {from: bob})
 
       const log = res.logs[0];
-      assert.equal(log.event, "Cancelled", "Cancelled event is not emitted")
+      assert.equal(log.event, "CancelledSubscription", "CancelledSubscription event is not emitted")
       assert.equal(log.args.subscriber, bob, "Subscriber should be Bob");
       assert.equal(log.args.planId, 0, "Plan ID should be 0");
     })
@@ -179,13 +178,13 @@ contract("Subscriptions", function (accounts) {
   describe("Pause a subscription", async function(){
     it("should not allow pause if plan does not exist", async function(){
       // Try pause a subscription for a plan that does not exist
-      await catchRevert(instance.pause(0, {from:bob}));
+      await catchRevert(instance.pauseSubscription(0, {from:bob}));
     })
 
     it("should not allow pause if no subscription", async function(){
       // Try pause a subscription that does not exist
       await instance.createPlan(fee, durationDays, {from: alice});
-      await catchRevert(instance.pause(0, {from:bob}));
+      await catchRevert(instance.pauseSubscription(0, {from:bob}));
     })
 
     it("should not allow pause if subscription paused already", async function(){
@@ -194,10 +193,10 @@ contract("Subscriptions", function (accounts) {
       await instance.subscribe(0, {from: bob, value: fee});
 
       // Pause it a first time
-      await instance.pause(0, {from: bob});
+      await instance.pauseSubscription(0, {from: bob});
 
       // Try to pause it a second time
-      await catchRevert(instance.pause(0, {from: bob}));
+      await catchRevert(instance.pauseSubscription(0, {from: bob}));
     })
 
     it("should not allow pause if subscription has expired", async function(){
@@ -209,7 +208,7 @@ contract("Subscriptions", function (accounts) {
       await time.increase(time.duration.days(Number(durationDays.add(new BN(1)))));
 
       // Try to pause it
-      await catchRevert(instance.pause(0, {from: bob}));
+      await catchRevert(instance.pauseSubscription(0, {from: bob}));
     })
 
     it("should pause the plan", async function(){
@@ -217,7 +216,7 @@ contract("Subscriptions", function (accounts) {
       await instance.subscribe(0, {from: bob, value: fee});
 
       // Pause the plan and get the timestamp
-      res = await instance.pause(0, {from: bob})
+      res = await instance.pauseSubscription(0, {from: bob})
       const ts = (await web3.eth.getBlock(res.receipt.blockNumber)).timestamp;
 
       // Check that pause date is correctly assigned to subscription
@@ -226,13 +225,13 @@ contract("Subscriptions", function (accounts) {
       assert.equal(toUTC(sub.pauseDate), toUTC(ts), "pause date should be the block timestamp");
     })
 
-    it("should emit Paused event", async function(){
+    it("should emit PausedSubscription event", async function(){
       await instance.createPlan(fee, durationDays, {from: alice});
       await instance.subscribe(0, {from: bob, value: fee});
-      const res = await instance.pause(0, {from: bob})
+      const res = await instance.pauseSubscription(0, {from: bob})
 
       const log = res.logs[0];
-      assert.equal(log.event, "Paused", "Paused event is not emitted")
+      assert.equal(log.event, "PausedSubscription", "PausedSubscription event is not emitted")
       assert.equal(log.args.subscriber, bob, "Subscriber should be Bob");
       assert.equal(log.args.planId, 0, "Plan ID should be 0");
     })
@@ -241,20 +240,20 @@ contract("Subscriptions", function (accounts) {
   describe("Unpause a subscription", async function(){
     it("should not allow unpause if plan does not exist", async function(){
       // Try unpause a subscription for a plan that does not exist
-      await catchRevert(instance.unpause(0, {from:bob}));
+      await catchRevert(instance.unpauseSubscription(0, {from:bob}));
     })
 
     it("should not allow unpause if no subscription", async function(){
       // Try unpause a subscription that does not exist
       await instance.createPlan(fee, durationDays, {from: alice});
-      await catchRevert(instance.unpause(0, {from:bob}));
+      await catchRevert(instance.unpauseSubscription(0, {from:bob}));
     })
 
     it("should not allow unpause if subscription not on pause", async function(){
       // Try unpause a subscription that is not on pause
       await instance.createPlan(fee, durationDays, {from: alice});
       await instance.subscribe(0, {from: bob, value: fee});
-      await catchRevert(instance.unpause(0, {from: bob}));
+      await catchRevert(instance.unpauseSubscription(0, {from: bob}));
     })
 
     it("should unpause the plan", async function(){
@@ -265,12 +264,12 @@ contract("Subscriptions", function (accounts) {
       
       // Let some time pass and pause 1 day before expiry
       await time.increase(time.duration.days(Number(durationDays.sub(new BN(1)))));
-      res = await instance.pause(0, {from: bob, value: fee});
+      res = await instance.pauseSubscription(0, {from: bob, value: fee});
       const pausedAt = (await web3.eth.getBlock(res.receipt.blockNumber)).timestamp;
 
       // Let 100 days pass and unpause. Save the unpause date.
       await time.increase(time.duration.days(100));
-      res = await instance.unpause(0, {from: bob})
+      res = await instance.unpauseSubscription(0, {from: bob})
       const unpausedAt = (await web3.eth.getBlock(res.receipt.blockNumber)).timestamp;
 
       // Check subscription attributes and in particular new pause and end dates
@@ -281,14 +280,14 @@ contract("Subscriptions", function (accounts) {
       assert.equal(toUTC(sub.endDate), toUTC(expectedNewEndDate), "endDate is not as expected");
     })
 
-    it("should emit Unpaused event", async function(){
+    it("should emit UnpausedSubscription event", async function(){
       await instance.createPlan(fee, durationDays, {from: alice});
       await instance.subscribe(0, {from: bob, value: fee});
-      await instance.pause(0, {from: bob})
-      const res = await instance.unpause(0, {from: bob})
+      await instance.pauseSubscription(0, {from: bob})
+      const res = await instance.unpauseSubscription(0, {from: bob})
 
       const log = res.logs[0];
-      assert.equal(log.event, "Unpaused", "Unpaused event is not emitted")
+      assert.equal(log.event, "UnpausedSubscription", "UnpausedSubscription event is not emitted")
       assert.equal(log.args.subscriber, bob, "Subscriber should be Bob");
       assert.equal(log.args.planId, 0, "Plan ID should be 0");
       assert.equal(log.args.timestamp, 0, "Pause date should be 0");
@@ -298,21 +297,21 @@ contract("Subscriptions", function (accounts) {
   describe("Renew a subscription", async function(){
     it("should not allow renew if plan does not exist", async function(){
       // Try renew a subscription for a plan that does not exist
-      await catchRevert(instance.renew(0, {from:bob}));
+      await catchRevert(instance.renewSubscription(0, {from:bob}));
     })
 
     it("should not allow renew if no subscription", async function(){
       // Try renew a subscription that does not exist
       await instance.createPlan(fee, durationDays, {from: alice});
-      await catchRevert(instance.renew(0, {from:bob}));
+      await catchRevert(instance.renewSubscription(0, {from:bob}));
     })
 
     it("should not allow renew if subscription is paused", async function(){
       // Try renew a subscription that is paused
       await instance.createPlan(fee, durationDays, {from: alice});
       await instance.subscribe(0, {from:bob, value:fee});
-      await instance.pause(0, {from:bob});
-      await catchRevert(instance.renew(0, {from:bob}));
+      await instance.pauseSubscription(0, {from:bob});
+      await catchRevert(instance.renewSubscription(0, {from:bob}));
     });
 
     it("should renew if not expired", async function(){
@@ -326,7 +325,7 @@ contract("Subscriptions", function (accounts) {
       var bobBalanceBefore = await web3.eth.getBalance(bob);
 
       // Renew and get renewal date
-      res = await instance.renew(0, {from:bob, value:fee})
+      res = await instance.renewSubscription(0, {from:bob, value:fee})
       renewalDate = (await web3.eth.getBlock(res.receipt.blockNumber)).timestamp;
 
       // Get Alice and Bob's balances after renewal
@@ -364,7 +363,7 @@ contract("Subscriptions", function (accounts) {
 
       // Let the subscription expire
       await time.increase(time.duration.days(Number(durationDays.add(new BN(1)))));
-      res = await instance.renew(0, {from:bob, value:fee})
+      res = await instance.renewSubscription(0, {from:bob, value:fee})
       renewalDate = (await web3.eth.getBlock(res.receipt.blockNumber)).timestamp;
 
       // Get Alice and Bob's balances after renewal
@@ -391,17 +390,56 @@ contract("Subscriptions", function (accounts) {
       assert.equal(toUTC(sub.endDate), toUTC(new BN(renewalDate).add(new BN(time.duration.days(durationDays)))), "End date should be pushed back by the expected number of days");
     });
 
-    it("should emit Renewed event", async function(){
+    it("should emit RenewedSubscription event", async function(){
       await instance.createPlan(fee, durationDays, {from: alice});
       await instance.subscribe(0, {from: bob, value: fee});
-      const res = await instance.renew(0, {from: bob, value:fee});
+      const res = await instance.renewSubscription(0, {from: bob, value:fee});
       const renewalDate = (await web3.eth.getBlock(res.receipt.blockNumber)).timestamp;
 
       const log = res.logs[0];
-      assert.equal(log.event, "Renewed", "Renewed event is not emitted")
+      assert.equal(log.event, "RenewedSubscription", "RenewedSubscription event is not emitted")
       assert.equal(log.args.subscriber, bob, "Subscriber should be Bob");
       assert.equal(log.args.planId, 0, "Plan ID should be 0");
       assert.equal(log.args.timestamp, renewalDate, "timestamp should be renewal date");
     })
+  });
+
+  describe("Own the contract", async function(){
+    it("should have the contract creator as the contract owner", async function(){
+      assert.equal(await instance.owner(), contractOwner, "Contract owner should be the contract creator");
+    });
+  });
+
+  describe("Pause and unpause contract", async function(){
+    it("should allow contract owner to pause and unpause the contract", async function(){
+      // Owner pauses the contract
+      await instance.pauseContract({from:contractOwner});
+      assert.equal(await instance.paused(), true, "Contract should be paused");
+      // Owner unpauses the contract
+      await instance.unpauseContract({from:contractOwner});
+      assert.equal(await instance.paused(), false, "Contract should be unpaused");
+    });
+
+    it("should not allow non contract owners to pause the contract", async function(){
+      // Alice tries to pause the contract
+      await catchRevert(instance.pauseContract({from:alice}));
+    });
+
+    it("should not allow non contract owners to unpause the contract", async function(){
+      // Owner pauses the contract
+      await instance.pauseContract({from:contractOwner});
+      // Alice tries to unpause it
+      await catchRevert(instance.unpauseContract({from:alice}));
+    });
+
+    it("should not allow to subscribe if contract is paused", async function(){
+      // Alice creates a new plan
+      await instance.createPlan(fee, durationDays, {from: alice});
+      // Make the owner pause the contract
+      await instance.pauseContract({from: contractOwner});
+      // Make Bob try to subscribe to the plan. Check that revert happens
+      await catchRevert(instance.subscribe(0, {from: bob, value: fee}));
+    });
+
   });
 });

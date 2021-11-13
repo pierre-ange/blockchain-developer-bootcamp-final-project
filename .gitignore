@@ -2,5 +2,5 @@ build/
 node_modules/
 workspace.code-workspace
 .env
-
+.DS_Store
 interacting-with-contract.js

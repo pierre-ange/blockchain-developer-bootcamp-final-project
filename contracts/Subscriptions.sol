@@ -163,15 +163,26 @@ contract Subscriptions is Ownable, Pausable{
         _;
     }
 
-    /* Functions */ 
+    /* Functions */
+    /**
+     * @notice Pause the contract if unpaused
+     *
+     * Requirements:
+     * - Only from owner
+     */
     function pauseContract() public onlyOwner() {
         super._pause();
     }
 
+    /**
+     * @notice Unpause the contract if paused
+     *
+     * Requirements:
+     * - Only from owner
+     */
     function unpauseContract() public onlyOwner() {
         super._unpause();
     }
-
 
     /**
      * @notice Create a new plan with fee `fee` and duration `durationDays`
@@ -181,6 +192,7 @@ contract Subscriptions is Ownable, Pausable{
      * @return ID of plan newly created
      */
     function createPlan(uint fee, uint durationDays) public returns (uint){
+        require(durationDays > 0);
         uint id = nextPlanId;
         plans[id] = Plan({
             publisher: payable(msg.sender),

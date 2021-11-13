@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Consensys Blockchain Developer Bootcamp</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <style>
+    .fieldset-inline {
+      display: flex;
+      flex-flow: row wrap;
+      align-items: center;
+      }
+  </style>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="#">Subscription Platform (Consensys Blockchain Developer Bootcamp)</a>
+      <div class="form-inline">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text showAccount" id="basic-addon1">No wallet connected</span>
+          </div>
+          <button class="btn btn-sm btn-outline-success enableEthereumButton my-2 my-sm-0">Connect Wallet</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Existing plans and subscriptions -->
+    <div class="container-fluid pt-4">
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Your plans on offer</h5>
+              <div id="accountPlans">
+                <p id="accountPlansNoneMsg" class="card-text d-none">You have not created any plan</p>
+                <table id="accountPlansTbl" class="table table-sm table-striped table-hover  d-none">
+                  <thead>
+                    <tr>
+                      <th>Plan ID</th>
+                      <!-- <th>Publisher</th> -->
+                      <th>Fee (ETH)</th>
+                      <th>Duration (days)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Create a new plan -->
+              <br><br>
+              <h5>Create a new plan</h5>
+              <form class="createPlan form-inline">
+                <fieldset class="fieldset-inline" disabled>
+                  <label class="sr-only" for="feeInput">Fee</label>
+                  <div class="input-group input-group-sm mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">ETH</div>
+                    </div>
+                    <input type="text" class="form-control" id="feeInput" name="fee" placeholder="Fee in ETH">
+                  </div>
+        
+                  <label class="sr-only" for="durationInput">Duration in days</label>
+                  <input type="number" class="form-control form-control-sm mb-2 mr-sm-2" name="durationDays" id="durationInput" placeholder="Duration in days">
+                  <button type="submit" class="btn btn-primary btn-sm mb-2">Submit</button>
+                </fieldset>
+              </form>
+
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Your existing subscriptions</h5>
+              <div id="accountSubs">
+                <p id="accountSubsNoneMsg" class="card-text d-none">You do not have subscriptions</p>
+                <table id="accountSubsTbl" class="table table-sm table-striped table-hover d-none">
+                  <thead>
+                    <tr>
+                      <th>Plan ID</th>
+                      <th>Start Date</th>
+                      <th>End Date</th>
+                      <th>Pause Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Subscribe to a plan -->
+              <br><br>
+              <h5>Subscribe to another plan</h5>
+              <p id="allPlansNoneMsg" class="card-text d-none">No existing plan to subscribe to</p>
+              <table id="allPlansTbl" class="table table-sm table-striped table-hover d-none">
+                <thead>
+                  <tr>
+                    <th>Plan ID</th>
+                    <th>Publisher</th>
+                    <th>Fee (ETH)</th>
+                    <th>Duration (days)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

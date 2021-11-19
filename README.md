@@ -4,6 +4,10 @@ This repository is home to my submission to the 2021 Consensys Blockchain Develo
 
 # Subscription platform
 
+## Deployed URL
+
+[https://jovial-swartz-4d20ab.netlify.app](https://jovial-swartz-4d20ab.netlify.app)
+
 ## Description
 
 Platform for publishers to create subscription plans and users to subscribe to a plan.  
@@ -26,10 +30,6 @@ Steps 3, 4 and 5 are implemented in the smart contract but are not (yet) availab
   4. Publisher does not get paid immediately, but via an accrual mechanism so that they can only redeem the full subscription fee at the end of the term. This should allow the following two improvements:  
      a. Allow cancellation refunds (via mechanism discussed in point 1.)  
      b. Allow publisher to terminate a plan. Non-accrued fees are then sent back to subscribers' wallets.
-
-# Deployed URL
-
-[https://jovial-swartz-4d20ab.netlify.app](https://jovial-swartz-4d20ab.netlify.app)
 
 # Instructions for local testing
 
@@ -82,7 +82,7 @@ blockchain-developer-bootcamp-final-project
 │   package-lock.json           --> Project dependency tree
 │   package.json                --> Project requirements
 │   truffle-config.js           --> Truffle config file
-```
+``` 
 
 # Bootcamp checklist
 

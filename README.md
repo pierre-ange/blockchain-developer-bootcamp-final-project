@@ -31,9 +31,9 @@ blockchain-developer-bootcamp-final-project
 │   
 └───contracts
 │   │   Migrations.sol
-│   │   Subscriptions.sol       --> Our contract!
+│   │   Subscriptions.sol       --> Our contract deployed on Ropsten!
 │   
-└───migrations                  --> Our migration scripts!
+└───migrations                  --> Migration scripts to deploy contracts
 │   │   1_initial_migration.js
 │   │   2_deploy_subscriptions.js
 │
@@ -54,16 +54,16 @@ blockchain-developer-bootcamp-final-project
 │   truffle-config.js           --> Truffle config file
 ```
 
-# Front-End Access
+# Deployed URL
 
-TBC
+[https://jovial-swartz-4d20ab.netlify.app](https://jovial-swartz-4d20ab.netlify.app)
 
 # Instructions for local testing
 
 ## Pre-requisites
 
 ## Contracts
- - npm install?
+ - npm install? TODO
  - Run local testnet in port 8545 with an Ethereum client, e.g. Ganache: `ganache-cli -p 8545`
  - `truffle migrate --network development`
  - `truffle test --network development`
@@ -75,6 +75,12 @@ TBC
  - Accessing or - if your project needs a server (not required) - running your project
  - Running your smart contract unit tests and which port a local testnet should be running on.
 
+## Environment variables (not needed for running project locally)
+
+```
+INFURA_URL=
+MNEMONIC=
+```
 
 # Bootcamp checklist
 
@@ -83,7 +89,7 @@ TBC
 - [ ] Contain a [README.md](.README.md) file which describes:
   - [x] the project, 
   - [x] the directory structure 
-  - [ ] where the frontend project can be accessed? 
+  - [x] where the frontend project can be accessed? 
   - [ ] *optional* public Ethereum address if you'd like your certification as an NFT?
   
 - [x] Contain smart contract(s) which:
@@ -93,20 +99,20 @@ TBC
   - [x] Inherits from at least one library or interface
   - [x] Can be easily compiled, migrated and tested
   
-- [ ] Contain a Markdown file named [design_pattern_decisions.md](./design_pattern_decisions.md) and [avoiding_common_attacks.md](/avoiding_common_attacks.md)
+- [x] Contain a Markdown file named [design_pattern_decisions.md](./design_pattern_decisions.md) and [avoiding_common_attacks.md](/avoiding_common_attacks.md)
 
 - [x] Have at least five smart contract unit tests that pass
 
 - [x] Contain a [deployed_address.txt](./deployed_address.txt) file which contains the testnet address and network where your contract(s) have been deployed
   
-- [ ] Have a frontend interface built with a framework like React or HTML/CSS/JS that:
+- [x] Have a frontend interface built with a framework like React or HTML/CSS/JS that:
   - [x] Detects the presence of MetaMask
   - [x] Connects to the current account
   - [x] Displays information from your smart contract
   - [x] Allows a user to submit a transaction to update smart contract state
-  - [ ] Updates the frontend if the transaction is successful or not
+  - [x] Updates the frontend if the transaction is successful or not
   
-- [ ] Hosted on Github Pages, Heroku, Netlify, Fleek, or some other free frontend service that gives users a public interface to your decentralized application? (That address should be in your README.md document)
+- [x] Hosted on Github Pages, Heroku, Netlify, Fleek, or some other free frontend service that gives users a public interface to your decentralized application
 
 - [ ] Have clear instructions for: 
   - [ ] Installing dependencies for your project 

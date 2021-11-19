@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Consensys Blockchain Developer Bootcamp</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-flatly.min.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
   </head>
   <style>
     .fieldset-inline {
@@ -15,14 +16,15 @@
       }
   </style>
   <body>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-dark bg-primary">
       <a class="navbar-brand" href="#">Subscription Platform (Consensys Blockchain Developer Bootcamp)</a>
       <div class="form-inline">
         <div class="input-group">
           <div class="input-group-prepend">
+            <span class="input-group-text showChain">Chain</span>
             <span class="input-group-text showAccount" id="basic-addon1">No wallet connected</span>
           </div>
-          <button class="btn btn-sm btn-outline-success enableEthereumButton my-2 my-sm-0">Connect Wallet</button>
+          <button class="btn btn-sm btn-success enableEthereumButton my-2 my-sm-0">Connect Wallet</button>
         </div>
       </div>
     </nav>
@@ -84,7 +86,7 @@
                       <th>Plan ID</th>
                       <th>Start Date</th>
                       <th>End Date</th>
-                      <th>Pause Date</th>
+                      <!-- <th>Pause Date</th> -->
                     </tr>
                   </thead>
                   <tbody>
@@ -100,15 +102,42 @@
                 <thead>
                   <tr>
                     <th>Plan ID</th>
-                    <th>Publisher</th>
+                    <th>From</th>
                     <th>Fee (ETH)</th>
                     <th>Duration (days)</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction sent window  -->
+    <div id="sentModal" class="modal" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body ">
+            <p class="text-center">Please wait ...</p>
+            <div class="spinner loading"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction receipt window -->
+    <div id="receiptModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body ">
+            <p class="text-center">Transaction Executed!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success reload">Refresh the page</button>
           </div>
         </div>
       </div>

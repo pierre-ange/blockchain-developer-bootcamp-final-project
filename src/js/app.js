@@ -1,7 +1,15 @@
+const shortenAddress = (address, num = 3) => {
+  if (!address) return '';
+  return !!address && `${address.substring(0, num + 2)}...${address.substring(address.length - num - 1)}`;
+};
+
+const supportedChainIds = {3: "Ropsten", 1337: "Ganache test"};
+
 App = {
   web3Provider: null,
   contracts: {},
   accounts: [],
+  chain: null,
 
   init: async function() {
     return await App.initWeb3();
@@ -10,51 +18,103 @@ App = {
   initWeb3: async function() {
     if (typeof window.ethereum !== 'undefined') {
       console.log('MetaMask is installed!');
-      console.log('Network version: ' + window.ethereum.networkVersion);
-      console.log('Selected address: ' + window.ethereum.selectedAddress);
       App.web3Provider = window.ethereum;
     }
     web3 = new Web3(App.web3Provider); // Connect Metamask to our web3 object
     BN = web3.utils.BN;
-    return App.initContract();
+    hexToNumber = web3.utils.hexToNumber
+    await App.initContract();
+    App.bindEvents();
   },
 
-  initContract: function() {
-    $.getJSON('Subscriptions.json', function(data) {
+  initContract: async function() {
+    await $.getJSON('Subscriptions.json', function(data) {
       App.contracts.Subscriptions = TruffleContract(data);
       App.contracts.Subscriptions.setProvider(App.web3Provider);
-    
-      // Use our contract to retrieve and mark the adopted pets
-      // return App.markAdopted();
     });
 
-    return App.bindEvents();
+    // Get accounts
+    await App.web3Provider
+      .request({ method: 'eth_accounts' })
+      .then(App.onAccountsChanged)
+      .catch((err) => {
+        // Some unexpected error.
+        // For backwards compatibility reasons, if no accounts are available,
+        // eth_accounts will return an empty array.
+        console.error(err);
+      });
+
+    // Get chain id
+    App.web3Provider
+      .request({ method: 'eth_chainId' })
+      .then((chainId) => {
+        chainId = hexToNumber(chainId);
+        var chainName = supportedChainIds[chainId];
+        var isSupported = (typeof chainName !== "undefined");
+
+        const showChain = document.querySelector('.showChain')
+        if(isSupported){
+          showChain.innerHTML = chainName;
+          showChain.classList.remove("text-danger");
+        } else {
+          showChain.innerHTML = "Please switch to Ropsten";
+          showChain.classList.add("text-danger");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   },
 
   bindEvents: function() {
     // User clicks on Connect Wallet button
     $(document).on('click', '.enableEthereumButton', App.connectWallet);
 
-    // Account changes: reload the account interface
+    // Account changes
     App.web3Provider.on('accountsChanged', App.onAccountsChanged);
 
-    // Chain changes: reload the page
-    App.web3Provider.on('chainChanged', (_chainId) => window.location.reload());
+    // Chain changes
+    App.web3Provider.on('chainChanged', App.onChainChanged);
 
     // Create Plan form submit
     $(document).on('submit', 'form.createPlan', App.handleCreatePlan);
+
+    // Subscribe button click
+    $("button.subscribe").on('click', App.handleSubscribe);
+
+    // Reload button
+    $("button.reload").on("click", () => window.location.reload());
   },
 
-  onAccountsChanged: async function(accounts){
-    App.connectWallet();
+  onAccountsChanged: async function (accounts) {
+    if (accounts.length === 0) {
+      // MetaMask is locked or the user has not connected any accounts
+      console.log('Please connect to MetaMask.');
+    } else if (accounts[0] !== App.accounts[0]) {
+      App.accounts = accounts;
+      document.querySelector('.showAccount').innerHTML = shortenAddress(App.accounts[0]);
+      await App.showAccountData(App.accounts[0]);
+      App.enableCreatePlanForm();
+    }
+  },
+
+  onChainChanged: function (chainId) {
+    window.location.reload();
   },
 
   connectWallet: async function(){
-    const showAccount = document.querySelector('.showAccount');
-    App.accounts = await App.web3Provider.request({ method: 'eth_requestAccounts' });
-    showAccount.innerHTML = App.accounts[0];
-    App.showAccountData(App.accounts[0]);
-    App.enableCreatePlanForm();
+    App.web3Provider
+      .request({ method: 'eth_requestAccounts' })
+      .then(App.onAccountsChanged)
+      .catch((err) => {
+        if (err.code === 4001) {
+          // EIP-1193 userRejectedRequest error
+          // If this happens, the user rejected the connection request.
+          console.log('Please connect to MetaMask.');
+        } else {
+          console.error(err);
+        }
+      });
   },
 
   enableCreatePlanForm: async function(){
@@ -79,8 +139,30 @@ App = {
     instance.createPlan(fee, durationDays, {from: App.accounts[0]})
       .once('sending', function(payload){ console.log("sending " + payload) })
       .once('sent', function(payload){ console.log("sent " + payload) })
-      .once('transactionHash', function(hash){ console.log("transactionHash " + hash) })
-      .once('receipt', function(receipt){ console.log("receipt " + receipt) })
+      .once('transactionHash', function(hash){ console.log("transactionHash " + hash); $("#sentModal").modal("show"); })
+      .once('receipt', function(receipt){ console.log("receipt " + receipt); $("#receiptModal").modal("show"); })
+      .on('confirmation', function(confNumber, receipt, latestBlockHash){ console.log("confirmation " + receipt + confNumber + latestBlockHash) })
+      .on('error', function(error){ console.log("error " + error) })
+      .then(function(receipt){
+          console.log(receipt)
+      });
+  },
+
+  handleSubscribe: async function(e){
+    e.preventDefault();
+    const planId = parseInt(e.target.id);
+    let fee = $(e.target).closest("tr").children().eq(2).text() // Read fee on same row as button
+    fee = new BN(web3.utils.toWei(fee, "ether"))
+    await App.subscribe(planId, fee);
+  },
+
+  subscribe: async function(planId, fee){
+    var instance = await App.contracts.Subscriptions.deployed();
+    instance.subscribe(planId, {from:App.accounts[0], value:fee})
+      .once('sending', function(payload){ console.log("sending " + payload) })
+      .once('sent', function(payload){ console.log("sent " + payload) })
+      .once('transactionHash', function(hash){ console.log("transactionHash " + hash); $("#sentModal").modal("show"); })
+      .once('receipt', function(receipt){ console.log("receipt " + receipt); $("#receiptModal").modal("show"); })
       .on('confirmation', function(confNumber, receipt, latestBlockHash){ console.log("confirmation " + receipt + confNumber + latestBlockHash) })
       .on('error', function(error){ console.log("error " + error) })
       .then(function(receipt){
@@ -117,8 +199,6 @@ App = {
     // Get list of account's subscriptions
     for(let i=0; i<nextPlanId; i++){
       let sub = await instance.subscriptions(account, i);
-      console.log("sub: ");
-      console.log(sub);
       if(sub.subscriber !== "0x0000000000000000000000000000000000000000"){
         sub.planId = i;
         subs.push(sub);
@@ -140,9 +220,9 @@ App = {
         $('#accountSubsTbl').find("tbody").append(
           '<tr>' + 
           '<td>' + sub.planId + '</td>' +
-          '<td>' + sub.startDate + '</td>' +
-          '<td>' + sub.endDate + '</td>' +
-          '<td>' + sub.pauseDate + '</td>' +
+          '<td>' + (new Date(sub.startDate*1000)).toUTCString().substring(5) + '</td>' + // Datetime with weekday removed
+          '<td>' + (new Date(sub.endDate*1000)).toUTCString().substring(5) + '</td>' + // Datetime with weekday removed
+          // '<td>' + sub.pauseDate + '</td>' +
           '</tr>'
           );
       }
@@ -206,9 +286,10 @@ App = {
         $('#allPlansTbl').find("tbody").append(
           '<tr>' + 
           '<td>' + plan.planId + '</td>' +
-          '<td>' + plan.publisher + '</td>' +
+          '<td>' + shortenAddress(plan.publisher) + '</td>' +
           '<td>' + plan.fee/1e18 + '</td>' +
           '<td>' + plan.duration/24/3600 + '</td>' +
+          '<td><button id="' + plan.planId + '" class="btn btn-sm btn-success subscribe">Subscribe</button></td>' +
           '</tr>'
           );
       }

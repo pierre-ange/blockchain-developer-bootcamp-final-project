@@ -17,12 +17,13 @@ Subscription platform enabling publishers to monetize their content and users to
   4. Subscriber can cancel a subscription. As a start and to make things easier, there is no refund mechanism.
   5. Subscriber can pause a subscription, then activate it again when they wish to.
 
-## Possible improvements
+## Possible improvements (not implemented)
   1. Publisher does not get paid immediately, but via an accrual mechanism so that they can only redeem the full subscription fee at the end of the term. This should allow the following two improvements:  
      a. Allow cancellation refunds (via mechanism discussed in point 1.)  
      b. Allow publisher to terminate a plan. Non-accrued fees are then sent back to subscribers' wallets.
   2. Allow payments in ERC20 token instead of ETH (DAI for example)
-
+  3. Use Pull over Push for security reasons.
+   
 # Directory Structure
 
 ```
@@ -58,6 +59,17 @@ blockchain-developer-bootcamp-final-project
 TBC
 
 # Instructions for local testing
+
+## Pre-requisites
+
+## Contracts
+ - npm install?
+ - Run local testnet in port 8545 with an Ethereum client, e.g. Ganache: `ganache-cli -p 8545`
+ - `truffle migrate --network development`
+ - `truffle test --network development`
+
+## Front-end
+ - `npm run dev`
  - Installing dependencies for your project 
  - .env?
  - Accessing or - if your project needs a server (not required) - running your project

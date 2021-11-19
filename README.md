@@ -2,27 +2,30 @@
 
 This repository is home to my submission to the 2021 Consensys Blockchain Developer Bootcamp.  
 
-*Status: **WIP***
-
 # Subscription platform
 
 ## Description
 
-Subscription platform enabling publishers to monetize their content and users to subscribe to publisher's content.  
+Platform for publishers to create subscription plans and users to subscribe to a plan.  
+The smart contract (and our front-end) handle all the subscription workflow across all publishers and subscribers.  
+This would allow publishers (via their own website) to identify their set of subscribers (via on-chain data) and give them access to restricted content (similar to how a paywall works).
 
 ## Workflow  
   1. Publisher creates a new plan: duration, fee in ETH.
   2. Subscriber can subscribe to a plan, by paying the fixed fee to the publisher.
-  3. Subscriber can renew a subscription.
+  3. Subscriber can renew a subscription. 
   4. Subscriber can cancel a subscription. As a start and to make things easier, there is no refund mechanism.
   5. Subscriber can pause a subscription, then activate it again when they wish to.
 
+Steps 3, 4 and 5 are implemented in the smart contract but are not (yet) available in the front-end.
+
 ## Possible improvements (not implemented)
-  1. Publisher does not get paid immediately, but via an accrual mechanism so that they can only redeem the full subscription fee at the end of the term. This should allow the following two improvements:  
+  1. Expose steps 3, 4 & 5 of the workflow above in the front-end.
+  2. Allow payments in ERC20 tokens instead of ETH (DAI for example)
+  3. Use Pull over Push for security reasons (the publisher should withdraw rather than being sent the fees directly). Or better:
+  4. Publisher does not get paid immediately, but via an accrual mechanism so that they can only redeem the full subscription fee at the end of the term. This should allow the following two improvements:  
      a. Allow cancellation refunds (via mechanism discussed in point 1.)  
      b. Allow publisher to terminate a plan. Non-accrued fees are then sent back to subscribers' wallets.
-  2. Allow payments in ERC20 token instead of ETH (DAI for example)
-  3. Use Pull over Push for security reasons.
    
 # Directory Structure
 
@@ -61,19 +64,18 @@ blockchain-developer-bootcamp-final-project
 # Instructions for local testing
 
 ## Pre-requisites
+- Node.js
+- Truffle and Ganache
+- `git checkout master`
 
 ## Contracts
- - npm install? TODO
+ - `npm install`
  - Run local testnet in port 8545 with an Ethereum client, e.g. Ganache: `ganache-cli -p 8545`
  - `truffle migrate --network development`
  - `truffle test --network development`
 
 ## Front-end
  - `npm run dev`
- - Installing dependencies for your project 
- - .env?
- - Accessing or - if your project needs a server (not required) - running your project
- - Running your smart contract unit tests and which port a local testnet should be running on.
 
 ## Environment variables (not needed for running project locally)
 
@@ -114,9 +116,9 @@ MNEMONIC=
   
 - [x] Hosted on Github Pages, Heroku, Netlify, Fleek, or some other free frontend service that gives users a public interface to your decentralized application
 
-- [ ] Have clear instructions for: 
-  - [ ] Installing dependencies for your project 
-  - [ ] Accessing or - if your project needs a server (not required) - running your project
-  - [ ] Running your smart contract unit tests and which port a local testnet should be running on. 
+- [x] Have clear instructions for: 
+  - [x] Installing dependencies for your project 
+  - [x] Accessing or - if your project needs a server (not required) - running your project
+  - [x] Running your smart contract unit tests and which port a local testnet should be running on. 
   
 - [ ] A screencast of you walking through your project, including submitting transactions and seeing the updated state. You can use a screenrecorder of your choosing or something like Loom, and you can share the link to the recording in your README.md.

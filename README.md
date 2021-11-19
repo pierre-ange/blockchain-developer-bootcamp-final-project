@@ -40,7 +40,7 @@ Steps 3, 4 and 5 are implemented in the smart contract but are not (yet) availab
 ## Pre-requisites
 - Node.js
 - Truffle and Ganache
-- `git checkout master`
+- `git checkout main`
 
 ## Contracts
  - `npm install`

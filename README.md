@@ -31,6 +31,10 @@ Steps 3, 4 and 5 are implemented in the smart contract but are not (yet) availab
      a. Allow cancellation refunds (via mechanism discussed in point 1.)  
      b. Allow publisher to terminate a plan. Non-accrued fees are then sent back to subscribers' wallets.
 
+## Screencast link
+
+[https://youtu.be/-gq68TdBL7E](https://youtu.be/-gq68TdBL7E)
+
 # Instructions for local testing
 
 ## Pre-requisites
@@ -88,7 +92,7 @@ blockchain-developer-bootcamp-final-project
 
 - [x] Follow this naming format: https://github.com/YOUR_GITHUB_USERNAME_HERE/blockchain-developer-bootcamp-final-project
   
-- [ ] Contain a [README.md](.README.md) file which describes:
+- [x] Contain a [README.md](.README.md) file which describes:
   - [x] the project, 
   - [x] the directory structure 
   - [x] where the frontend project can be accessed? 
@@ -121,4 +125,4 @@ blockchain-developer-bootcamp-final-project
   - [x] Accessing or - if your project needs a server (not required) - running your project
   - [x] Running your smart contract unit tests and which port a local testnet should be running on. 
   
-- [ ] A screencast of you walking through your project, including submitting transactions and seeing the updated state. You can use a screenrecorder of your choosing or something like Loom, and you can share the link to the recording in your README.md.
+- [x] A screencast of you walking through your project, including submitting transactions and seeing the updated state. You can use a screenrecorder of your choosing or something like Loom, and you can share the link to the recording in your README.md.

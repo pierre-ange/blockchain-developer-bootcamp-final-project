@@ -26,7 +26,34 @@ Steps 3, 4 and 5 are implemented in the smart contract but are not (yet) availab
   4. Publisher does not get paid immediately, but via an accrual mechanism so that they can only redeem the full subscription fee at the end of the term. This should allow the following two improvements:  
      a. Allow cancellation refunds (via mechanism discussed in point 1.)  
      b. Allow publisher to terminate a plan. Non-accrued fees are then sent back to subscribers' wallets.
-   
+
+# Deployed URL
+
+[https://jovial-swartz-4d20ab.netlify.app](https://jovial-swartz-4d20ab.netlify.app)
+
+# Instructions for local testing
+
+## Pre-requisites
+- Node.js
+- Truffle and Ganache
+- `git checkout master`
+
+## Contracts
+ - `npm install`
+ - Run local testnet in port 8545 with an Ethereum client, e.g. Ganache: `ganache-cli -p 8545`
+ - `truffle migrate --network development`
+ - `truffle test --network development`
+
+## Front-end
+ - `npm run dev`
+
+## Environment variables (not needed for running project locally)
+
+```
+INFURA_URL=
+MNEMONIC=
+```
+
 # Directory Structure
 
 ```
@@ -55,33 +82,6 @@ blockchain-developer-bootcamp-final-project
 │   package-lock.json           --> Project dependency tree
 │   package.json                --> Project requirements
 │   truffle-config.js           --> Truffle config file
-```
-
-# Deployed URL
-
-[https://jovial-swartz-4d20ab.netlify.app](https://jovial-swartz-4d20ab.netlify.app)
-
-# Instructions for local testing
-
-## Pre-requisites
-- Node.js
-- Truffle and Ganache
-- `git checkout master`
-
-## Contracts
- - `npm install`
- - Run local testnet in port 8545 with an Ethereum client, e.g. Ganache: `ganache-cli -p 8545`
- - `truffle migrate --network development`
- - `truffle test --network development`
-
-## Front-end
- - `npm run dev`
-
-## Environment variables (not needed for running project locally)
-
-```
-INFURA_URL=
-MNEMONIC=
 ```
 
 # Bootcamp checklist

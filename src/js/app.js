@@ -94,6 +94,7 @@ App = {
       App.accounts = accounts;
       document.querySelector('.showAccount').innerHTML = shortenAddress(App.accounts[0]);
       await App.showAccountData(App.accounts[0]);
+      $("button.subscribe").on('click', App.handleSubscribe);
       App.enableCreatePlanForm();
     }
   },

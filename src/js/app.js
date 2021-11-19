@@ -216,6 +216,7 @@ App = {
 
     // Populate subscriptions table on the webpage
     if(subs.length!==0){
+      document.getElementById("accountSubsNoneMsg").classList.add("d-none");
       document.getElementById("accountSubsTbl").classList.remove("d-none");
       for(const sub of subs){
         $('#accountSubsTbl').find("tbody").append(

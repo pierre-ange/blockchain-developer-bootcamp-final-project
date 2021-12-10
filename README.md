@@ -35,6 +35,10 @@ Steps 3, 4 and 5 are implemented in the smart contract but are not (yet) availab
 
 [https://youtu.be/-gq68TdBL7E](https://youtu.be/-gq68TdBL7E)
 
+## Public Ethereum account for certification
+
+`0x8DD00e9583ECaF9d71e2150C42728Ef794890760`
+
 # Instructions for local testing
 
 ## Pre-requisites
@@ -96,7 +100,7 @@ blockchain-developer-bootcamp-final-project
   - [x] the project, 
   - [x] the directory structure 
   - [x] where the frontend project can be accessed? 
-  - [ ] *optional* public Ethereum address if you'd like your certification as an NFT?
+  - [x] *optional* public Ethereum address if you'd like your certification as an NFT?
   
 - [x] Contain smart contract(s) which:
   - [x] Are commented to the specs described by NatSpec Solidity documentation
